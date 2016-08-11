@@ -1,0 +1,39 @@
+
+
+.lpb-component{
+  width: 100px;
+  height: 100px;
+  outline: 2px dashed lightblue;
+  text-align: center;
+}
+
+#lpb-com-container{
+
+  margin: 50px auto;
+
+  .lpb-component{
+    float: left;
+    width: 100px;
+    height: 100px;
+    outline: 2px dashed lightblue;
+    text-align: center;
+    margin: 10px auto;
+  }
+}
+
+#lpb-com-editor{
+  margin: 100px 100px;
+  min-height: 300px;
+  border: 1px solid green;
+
+  .lpb-component{
+    width: 100%;
+    outline : 2px dashed gray;
+    min-height: 100px;
+  }
+
+  .ui-state-highlight{
+    height: 80px;
+    background: orange;
+  }
+}
