@@ -18,3 +18,5 @@ require('common:widget/lib/jquery/jquery.js');
 
 require('common:widget/lib/jquery-ui/jquery-ui.js');
 
+require('common:widget/component/all/all.js');
+

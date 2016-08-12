@@ -7,6 +7,13 @@
   text-align: center;
 }
 
+//拖拽过程中的组件
+.gplb-com-drag-holder{
+  width: 100px;
+  height: 100px;
+  outline: 1px solid red;
+}
+
 #lpb-com-container{
 
   margin: 50px auto;

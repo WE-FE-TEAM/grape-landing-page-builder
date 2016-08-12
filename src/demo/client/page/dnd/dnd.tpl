@@ -4,11 +4,11 @@
 {% block block_body %}
 
 <div id="lpb-com-container" class="ui-helper-clearfix">
-    <div class="lpb-component" data-lpb-component="layout_row">布局行</div>
-    <div class="lpb-component" data-lpb-component="layout_column">布局列</div>
+    <div class="lpb-component glpb-com-raw-layout_row" data-com-name="layout_row">布局行</div>
+    <div class="lpb-component glpb-com-raw-layout_column" data-com-name="layout_column">布局列</div>
 </div>
 
-<div id="lpb-com-editor" class="lpb-sortable">
+<div id="lpb-com-editor" class="lpb-sortable gplb-sys-editor">
 
 </div>
 

@@ -1,2 +1,12 @@
 
 @import url('./reset.scss?__inline');
+
+
+.clearfix:after{
+  display: block;
+  height:0;
+  visibility: hidden;
+  content: '\020';
+  font-size:0;
+  clear: both;
+}

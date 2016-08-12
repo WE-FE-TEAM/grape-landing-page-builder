@@ -1,0 +1,36 @@
+
+.glpb-component{
+  outline: none;
+
+  &:hover{
+    outline: 1px dashed #848484;
+  }
+}
+
+
+//编辑状态下的
+.gplb-sys-editor{
+
+  .custom-state-active{
+    outline: 2px dashed blue;
+  }
+
+  .custom-state-hover{
+    background: lightblue;
+  }
+
+  //sortable 中, 拖拽排序过程中的垂直分隔符
+  .sortable-placeholder-vertical{
+    float: left;
+    width: 2%;
+    height: 100%;
+    background: deeppink;
+  }
+  //sortable 中, 拖拽排序过程中的水平分隔符
+  .sortable-placeholder-horizontal{
+    float: left;
+    width: 100%;
+    height: 10px;
+    background: deeppink;
+  }
+}

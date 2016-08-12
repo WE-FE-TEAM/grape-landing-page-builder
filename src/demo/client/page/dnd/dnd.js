@@ -5,10 +5,17 @@
 
 'use strict';
 
+const $ = require('common:widget/lib/jquery/jquery.js');
+const utils = require('common:widget/ui/utils/utils.js');
+const componentFactory = require('common:widget/component/component-factory/component-factory.js');
+
+
 
 let singleton = {
 
     init : function(){
+
+        componentFactory.enableEditMode();
         
 
         let $componentList = $('#lpb-com-container');
@@ -23,20 +30,29 @@ let singleton = {
 
         $editor.droppable({
             // accept : '.lpb-component',
-            accept : '[data-lpb-component=layout_row], [data-lpb-component=layout_column]',
+            accept : '[data-com-name=layout_row]',
             classes: {
                 "ui-droppable-active": "custom-state-active"
             },
             drop : function(e, ui){
                 let $draggable = ui.draggable;
                 if( $draggable.parents('#lpb-com-container').length > 0 ){
-                    $editor.append( $draggable.clone() );
+
+                    let conf = {
+                        parentId : null,
+                        componentName : 'layout_row'
+                    };
+                    let component = componentFactory.createComponentInstance(conf);
+                    component.render();
+                    let $el = component.$getElement();
+                    $editor.append( $el );
+                    component.bindEvent();
                 }
 
             }
         }).sortable({
-            items: ".lpb-component",
-            placeholder: "ui-state-highlight",
+            items: ".glpb-com-layout_row",
+            placeholder: "ui-state-highlight sortable-placeholder-horizontal",
             start : function(event, ui){
                 console.log('start: ' + ui.item.index() );
             },
