@@ -8,6 +8,7 @@
 
 
 const $ = require('common:widget/lib/jquery/jquery.js');
+const utils = require('common:widget/ui/utils/utils.js');
 const componentFactory = require('common:widget/component/component-factory/component-factory.js');
 
 
@@ -40,7 +41,11 @@ $.extend( ComponentBase.prototype, {
     render : noop,
 
     //渲染编辑模式下, 额外的DOM组件
-    renderEditorHelper : noop,
+    renderEditorHelper : function(){
+        let $el = this.$el;
+        let $editorSettingWrap = this.$getEditSettingWrap();
+        $el.prepend($editorSettingWrap);
+    },
 
     afterRender : noop,
 
@@ -86,7 +91,14 @@ $.extend( ComponentBase.prototype, {
     //绑定组件本身的事件
     bindComponentEvent : noop,
     //绑定组件在编辑器中的事件
-    bindEditorEvent : noop,
+    bindEditorEvent : function(){
+        let that = this;
+        this.$el.on('mouseenter', function(){
+            that.$el.addClass('glpb-editor-bar-showing');
+        }).on('mouseleave', function(){
+            that.$el.removeClass('glpb-editor-bar-showing');
+        });
+    },
 
     getComponentId : function(){
         return this.componentId;
@@ -116,6 +128,17 @@ $.extend( ComponentBase.prototype, {
         return [];
     },
     
+    //返回统一的组件上拖动/编辑的固定DIV容器
+    $getEditSettingWrap : function(){
+        let tpl = `<div class="glpb-editor-setting-wrap" data-com-id="${this.componentId}">
+    <div class="gplb-editor-setting-bar clearfix">
+        <span title="拖动" class="glpb-editor-op-btn glpb-editor-op-btn-drag" data-com-id="${this.componentId}"></span>
+    </div>
+</div>`;
+
+        return $( tpl );
+    },
+    
     isEditMode : function(){
         return componentFactory.isEditMode();
     },
@@ -124,6 +147,33 @@ $.extend( ComponentBase.prototype, {
     },
     isProductionMode : function(){
         return componentFactory.isProductionMode();
+    },
+
+    //从当前组件中删除指定ID的组件, **不** 进行DOM操作
+    editorRemoveComponent : function(componentId){
+        let components = this.components || [];
+        for( var i = 0, len = components.length; i < len; i++ ){
+            let conf = components[i];
+            if( conf.componentId === componentId ){
+                components.splice(i, 1);
+                return;
+            }
+        }
+        console.warn(`(editorRemoveComponent) : 组件[${this.componentId}]不包含子组件${componentId}`);
+    },
+
+    //返回当前组件的父组件ID
+    editorGetParentId : function(){
+        return this.parentId;
+    },
+    
+    //判断当前组件, 是否为 componentObj 的直接父组件
+    isContainComponent : function(componentObj){
+        if( componentObj ){
+            let parentId = componentObj.editorGetParentId();
+            return parentId === this.componentId;
+        }
+        return false;
     }
 } );
 
@@ -176,6 +226,7 @@ ComponentBase.extend = function( statics, prototype){
 
 
 ComponentBase.$ = $;
+ComponentBase.generateComponentId = utils.generateComponentId;
 
 //基础组件
 const CATEGORY_BASE = 'CATE_BASE';

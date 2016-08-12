@@ -11,7 +11,7 @@ const componentFactory = require('common:widget/component/component-factory/comp
 
 const $ = ComponentBase.$;
 
-const tpl = `<div></div>`;
+const tpl = `<div><div class="glpb-com-content clearfix"></div></div>`;
 
 
 
@@ -23,7 +23,7 @@ const LayoutColumn = ComponentBase.extend(
     {
         getDefaultStyle : function(){
             return {
-                height : '100%'
+                height : 'auto'
             };
         },
         init : function(){
@@ -31,9 +31,11 @@ const LayoutColumn = ComponentBase.extend(
         },
         render : function(){
             let currentComponentId = this.componentId;
-            let cssClass = this.getBaseCssClass() + ' clearfix ui-sortable ui-droppable ';
+            let cssClass = this.getBaseCssClass() + ' ';
             let $el = $(tpl).addClass( cssClass ).css( this.style );
+            let $content = $('.glpb-com-content', $el);
             this.$el = $el;
+            this.$content = $content;
             let components = this.components || [];
             for( var i = 0, len = components.length; i < len; i++ ){
                 let config = components[i];
@@ -53,6 +55,56 @@ const LayoutColumn = ComponentBase.extend(
         setStyle : function( style ){
             this.style = $.extend( this.style, style );
             this.$el.css( this.style );
+        },
+        bindEditorEvent : function(){
+            let that = this;
+            ComponentBase.prototype.bindEditorEvent.call( this );
+            this.$content.droppable({
+                // accept : '.lpb-component',
+                accept : '[data-com-name]',
+                classes: {
+                    "ui-droppable-active": "custom-state-active",
+                    "ui-droppable-hover": "custom-state-hover"
+                },
+                drop : function(e, ui){
+                    let $draggable = ui.draggable;
+                    let componentId = $draggable.attr('data-glpb-com-id');
+                    let componentName = $draggable.attr('data-com-name');
+                    if( componentName !== 'layout_column' ){
+
+                        e.stopPropagation();
+
+                        if( ! componentId ){
+                            that.addComponent( componentName );
+                        }else{
+                            that.addExistComponent( componentName, componentId);
+                        }
+                    }
+
+                }
+            })
+        },
+        
+        //要添加新的一个组件
+        addComponent : function(componentName){
+            let config = {
+                componentName : componentName,
+                parentId : this.componentId,
+                componentId : ComponentBase.generateComponentId()
+            };
+            let instance = componentFactory.createComponentInstance(config);
+            if( instance ){
+                instance.render();
+                this.$content.append( instance.$getElement() );
+                instance.bindEvent();
+            }else{
+                throw new Error(`componentName[${componentName}]对应的组件不存在!!`);
+            }
+        },
+        
+        //要添加的组件实例,已经存在!
+        addExistComponent : function(componentName, componentId ){
+            console.log(`add exist component : ${componentName} ${componentId}`);
         }
     }
 );

@@ -47,11 +47,14 @@ let singleton = {
                     let $el = component.$getElement();
                     $editor.append( $el );
                     component.bindEvent();
+                    
                 }
 
             }
-        }).sortable({
+        })
+            .sortable({
             items: ".glpb-com-layout_row",
+            handle: ".glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
             placeholder: "ui-state-highlight sortable-placeholder-horizontal",
             start : function(event, ui){
                 console.log('start: ' + ui.item.index() );

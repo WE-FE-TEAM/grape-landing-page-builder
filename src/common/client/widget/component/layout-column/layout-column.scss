@@ -8,5 +8,15 @@
 .gplb-sys-editor{
   .glpb-com-layout_column{
 
+    //操作栏放到右侧
+    &> .glpb-editor-setting-wrap .gplb-editor-setting-bar{
+      right: 0;
+      left: auto;
+    }
+
+
+    .glpb-com-content{
+      min-height: 100px;
+    }
   }
 }

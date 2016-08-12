@@ -1,15 +1,53 @@
 
-.glpb-component{
-  outline: none;
 
-  &:hover{
-    outline: 1px dashed #848484;
-  }
-}
 
 
 //编辑状态下的
 .gplb-sys-editor{
+
+  //全局通用的组件编辑栏
+  .glpb-editor-setting-wrap{
+    display: none;
+    position: relative;
+    height: 0;
+    z-index: 10;
+    overflow: visible;
+
+    .gplb-editor-setting-bar{
+      position: absolute;
+      height: 50px;
+      left: 0;
+      top: 0;
+      -webkit-transform: translateY(-100%);
+      -moz-transform: translateY(-100%);
+      -ms-transform: translateY(-100%);
+      -o-transform: translateY(-100%);
+      transform: translateY(-100%);
+
+      //操作小按钮
+      .glpb-editor-op-btn{
+        float: left;
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        border: 1px solid red;
+      }
+    }
+  }
+  //显示组件操作栏
+  .glpb-editor-bar-showing{
+    &>.glpb-editor-setting-wrap{
+      display: block;
+    }
+  }
+
+  .glpb-component{
+    outline: 1px dashed #848484;
+
+    //&:hover{
+    //  outline: 1px dashed #848484;
+    //}
+  }
 
   .custom-state-active{
     outline: 2px dashed blue;

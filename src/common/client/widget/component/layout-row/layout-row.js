@@ -24,7 +24,7 @@ const LayoutRow = ComponentBase.extend(
     {
         getDefaultStyle : function(){
             return {
-                height : '100px'
+                height : 'auto'
             };
         },
         getDefaultComponents : function(){
@@ -35,7 +35,7 @@ const LayoutRow = ComponentBase.extend(
                 componentName  : 'layout_column',
                 style : {
                     width : '100%',
-                    height : '100%'
+                    height : 'auto'
                 }
             };
             return [ columnConf ];
@@ -46,8 +46,8 @@ const LayoutRow = ComponentBase.extend(
         render : function(){
             let currentComponentId = this.componentId;
             let cssClass = this.getBaseCssClass() + '  ';
-            let $el = $(tpl).addClass( cssClass );
-            let $content = $('.glpb-com-content', $el).css( this.style );
+            let $el = $(tpl).addClass( cssClass ).css( this.style );
+            let $content = $('.glpb-com-content', $el);
             this.$el = $el;
             this.$content = $content;
             let components = this.components || [];
@@ -66,11 +66,6 @@ const LayoutRow = ComponentBase.extend(
             return $el;
         },
 
-        renderEditorHelper : function(){
-            let $el = this.$el;
-
-        },
-
         addColumn : function(){
             let rowComponentId = this.componentId;
             let columnConf = {
@@ -79,7 +74,7 @@ const LayoutRow = ComponentBase.extend(
                 componentName  : 'layout_column',
                 style : {
                     width : '100%',
-                    height : '100%'
+                    height : 'auto'
                 }
             };
             let components = this.components;
@@ -104,8 +99,32 @@ const LayoutRow = ComponentBase.extend(
             component.bindEvent();
         },
 
+        //添加已经存在的组件到内部
+        addExistColumn : function(componentId){
+            let component = componentFactory.getComponentById(componentId);
+            if( component ){
+                let oldParentId = component.editorGetParentId();
+                if( this.isContainComponent(component) ){
+                    //当前操作只是在组件内部重新排序子组件, 不进行任何操作, 在 sortable 中更新序号
+                    console.info(`componentId[${componentId}]在父组件[${this.componentId}]内重排序`);
+                    return;
+                }
+                //先从原来的组件中删除
+                let oldParent = componentFactory.getComponentById(oldParentId);
+                if( oldParent ){
+                    oldParent.editorRemoveComponent(componentId);
+                }
+                this.components.push({
+
+                });
+                this.$content.append( component.$getElement() );
+            }
+
+        },
+
         bindEditorEvent : function(){
             let that = this;
+            ComponentBase.prototype.bindEditorEvent.call( this );
             this.$content.droppable({
                 // accept : '.lpb-component',
                 accept : '[data-com-name=layout_column]',
@@ -115,9 +134,15 @@ const LayoutRow = ComponentBase.extend(
                 },
                 drop : function(e, ui){
                     let $draggable = ui.draggable;
+                    let componentId = $draggable.attr('data-glpb-com-id');
                     if( $draggable.parents('#lpb-com-container').length > 0 ){
 
+                        e.stopPropagation();
                         that.addColumn();
+                    }else if( componentId ){
+                        //添加已有的组件到内部
+                        e.stopPropagation();
+                        that.addExistColumn( componentId );
                     }
 
                 }
@@ -136,15 +161,18 @@ const LayoutRow = ComponentBase.extend(
                     console.log('sort end: ' + ui.item.index() );
                 }
             });
-            this.$el.draggable({
-                // connectToSortable : '.lpb-sortable',
-                revert : 'invalid',
-                helper : function(event, item){
-                    let componentName = item.attr('data-com-name');
-                    return `<div data-com-name="${componentName}" class="gplb-com-drag-holder gplb-drag-com-${componentName}"></div>`;
-                },
-                appendTo: "body"
-            });
+            // this.$el.draggable({
+            //     // connectToSortable : '.lpb-sortable',
+            //     handle: ".glpb-editor-op-btn-drag",
+            //     revert : 'invalid',
+            //     helper : function(event, item){
+            //         let dragBtn = event.target;
+            //         let componentId = that.componentId;
+            //         let componentName = that.componentName;
+            //         return `<div data-com-name="${componentName}" class="gplb-com-drag-holder gplb-drag-com-${componentName}"></div>`;
+            //     },
+            //     appendTo: "body"
+            // });
         }
     }
 );
