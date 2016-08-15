@@ -16,6 +16,9 @@ function noop(){}
 
 function ComponentBase( args ){
     args = args || {};
+
+    this.page = args.page;
+
     //当前组件的父组件ID
     this.parentId = args.parentId || null;
     //当前组件ID
@@ -49,22 +52,26 @@ $.extend( ComponentBase.prototype, {
 
     afterRender : noop,
 
+    getStyle : function(){
+        return this.style;
+    },
+
     setStyle : noop,
 
     setData : noop,
 
     toJSON : function(){
-        let sub = this.components || [];
-        let subJSON = sub.map( function(com){
-            return com.toJSON();
-        } );
+        // let sub = this.components || [];
+        // let subJSON = sub.map( function(com){
+        //     return com.toJSON();
+        // } );
         return {
             componentName : this.componentName,
             componentId : this.componentId,
             parentId : this.parentId,
             style : this.style,
             data : this.data,
-            components : subJSON
+            components : this.components || []
         };
     },
     destroy : noop,

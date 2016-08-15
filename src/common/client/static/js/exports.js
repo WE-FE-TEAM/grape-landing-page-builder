@@ -5,3 +5,4 @@
 
 
 require('moment');
+require('cssobj');

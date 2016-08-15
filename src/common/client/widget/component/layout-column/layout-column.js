@@ -30,17 +30,19 @@ const LayoutColumn = ComponentBase.extend(
 
         },
         render : function(){
+            
             let currentComponentId = this.componentId;
+            let currentConfig = this.page.getComponentConfig(currentComponentId);
             let cssClass = this.getBaseCssClass() + ' ';
             let $el = $(tpl).addClass( cssClass ).css( this.style );
             let $content = $('.glpb-com-content', $el);
             this.$el = $el;
             this.$content = $content;
-            let components = this.components || [];
+            let components = currentConfig.components || [];
             for( var i = 0, len = components.length; i < len; i++ ){
                 let config = components[i];
                 config.parentId = currentComponentId;
-                let com = componentFactory.createComponentInstance( config );
+                let com = this.page.createComponentInstance( config );
                 if( com ){
 
                     com.render();
@@ -61,7 +63,7 @@ const LayoutColumn = ComponentBase.extend(
             ComponentBase.prototype.bindEditorEvent.call( this );
             this.$content.droppable({
                 // accept : '.lpb-component',
-                accept : '[data-com-name]',
+                accept : '[data-com-name=layout_row]',
                 classes: {
                     "ui-droppable-active": "custom-state-active",
                     "ui-droppable-hover": "custom-state-hover"
@@ -79,10 +81,15 @@ const LayoutColumn = ComponentBase.extend(
                         }else{
                             that.addExistComponent( componentName, componentId);
                         }
+                    }else{
+                        //column组件内部不能直接放column组件
+                        console.warn(`column组件[${that.componentId}]内部不能直接放column组件`);
                     }
 
                 }
-            })
+            });
+
+            $('.ui-sortable').sortable('refresh');
         },
         
         //要添加新的一个组件
@@ -92,7 +99,7 @@ const LayoutColumn = ComponentBase.extend(
                 parentId : this.componentId,
                 componentId : ComponentBase.generateComponentId()
             };
-            let instance = componentFactory.createComponentInstance(config);
+            let instance = this.page.createComponentInstance(config);
             if( instance ){
                 instance.render();
                 this.$content.append( instance.$getElement() );
