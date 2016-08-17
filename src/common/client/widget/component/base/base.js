@@ -108,12 +108,26 @@ $.extend( ComponentBase.prototype, {
         }).on('mouseleave', function(){
             that.$el.removeClass('glpb-editor-bar-showing');
         });
+        
+        this.$editorSettingWrap.on('click', '.glpb-editor-op-btn-drag', function(){
+            that.$editorSettingWrap.toggleClass('editor-op-show-more');
+        } );
 
-        this.$el.on('click', '> .glpb-editor-setting-wrap .glpb-editor-op-btn-move', function(e){
+        //在父组件内移动位置
+        this.$editorSettingWrap.on('click', '.glpb-editor-op-btn-move', function(e){
             let currentTarget = e.currentTarget;
             let direction = currentTarget.getAttribute('data-direction');
             that.editorMoveInParent(direction);
         } );
+
+        //编辑组件
+        this.$editorSettingWrap.on('click', '.glpb-editor-op-btn-edit', function(){
+            that.enterEdit();
+        } );
+    },
+
+    enterEdit : function(){
+        this.page.editComponent(this.componentId);
     },
 
     editorMoveInParent : function(direction){
@@ -209,14 +223,19 @@ $.extend( ComponentBase.prototype, {
         let tpl = `<div class="glpb-editor-setting-wrap" data-com-id="${this.componentId}">
     <div class="gplb-editor-setting-bar clearfix">
         <span title="拖动" class="glpb-editor-op-btn glpb-editor-op-btn-drag" data-com-id="${this.componentId}"><i class="fa fa-arrows" aria-hidden="true"></i></span>
-        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="up" title="向上移动"><i class="fa fa-arrow-circle-up" aria-hidden="true"></i></span>
-        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="down"  title="向下移动"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i></span>
-        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="left"  title="向左移动"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
-        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="right"  title="向右移动"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span>
+        <span class="editor-op-more">
+            <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="up" title="向上移动"><i class="fa fa-arrow-circle-up" aria-hidden="true"></i></span>
+            <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="down"  title="向下移动"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i></span>
+            <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="left"  title="向左移动"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+            <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="right"  title="向右移动"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span>
+            <span  class="glpb-editor-op-btn glpb-editor-op-btn-edit" title="编辑"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+        </span>
     </div>
 </div>`;
 
-        return $( tpl );
+        this.$editorSettingWrap = $(tpl);
+
+        return this.$editorSettingWrap;
     },
     
     isEditMode : function(){
@@ -258,7 +277,7 @@ $.extend( ComponentBase.prototype, {
     },
 
     editorGetDragHelper : function(){
-        return `<div class="lpb-component " data-com-name="${this.componentName}" data-glpb-com-id="${this.componentId}">xxx</div>`;
+        return `<div class="glpb-component " data-com-name="${this.componentName}" data-glpb-com-id="${this.componentId}"></div>`;
     }
 } );
 
@@ -323,6 +342,13 @@ const CATEGORY_UI = 'CATE_UI';
 ComponentBase.CATEGORY = {
     BASE : CATEGORY_BASE,
     UI : CATEGORY_UI
+};
+
+//组件所属的平台
+ComponentBase.PLATFORM = {
+    PC : 'pc',
+    MOBILE : 'mobile',
+    RESPONSIVE : 'responsive'
 };
 
 

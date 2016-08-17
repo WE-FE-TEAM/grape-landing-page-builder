@@ -19,7 +19,9 @@ const tpl = `<div><div class="glpb-com-content clearfix"></div></div>`;
 const LayoutRow = ComponentBase.extend(
     {
         componentName : 'layout_row',
-        componentCategory : ComponentBase.CATEGORY.BASE
+        componentNameZh : '独占行',
+        componentCategory : ComponentBase.CATEGORY.BASE,
+        platform : ComponentBase.PLATFORM.PC
     }, 
     {
         getDefaultStyle : function(){
@@ -32,11 +34,7 @@ const LayoutRow = ComponentBase.extend(
             let columnConf = {
                 parentId : rowComponentId,
                 componentId : utils.generateComponentId(),
-                componentName  : 'layout_column',
-                style : {
-                    width : '100%',
-                    height : 'auto'
-                }
+                componentName  : 'layout_column'
             };
             return [ columnConf ];
         },
@@ -72,11 +70,7 @@ const LayoutRow = ComponentBase.extend(
             let columnConf = {
                 parentId : rowComponentId,
                 componentId : utils.generateComponentId(),
-                componentName  : 'layout_column',
-                style : {
-                    width : '100%',
-                    height : 'auto'
-                }
+                componentName  : 'layout_column'
             };
 
             //创建新的列组件
@@ -88,20 +82,24 @@ const LayoutRow = ComponentBase.extend(
 
             this.components.push( columnConf );
 
-            this.resize();
+            // this.resize();
         },
 
         //添加已经存在的组件到内部
         addExistColumn : function(componentId){
             let component = this.page.getComponentById(componentId);
             if( component ){
+                if( component.editorGetParentId() === this.componentId ){
+                    //本来就在当前组件里
+                    return;
+                }
                 let oldParentComponent = component.getParentComponent();
                 oldParentComponent.editorRemoveComponent(componentId);
                 this.components.push( component.toJSON() );
                 this.$content.append( component.$getElement() );
             }
 
-            this.resize();
+            // this.resize();
         },
 
         resize : function(){
@@ -140,7 +138,7 @@ const LayoutRow = ComponentBase.extend(
                 drop : function(e, ui){
                     let $draggable = ui.draggable;
                     let componentId = $draggable.attr('data-glpb-com-id');
-                    if( $draggable.parents('#lpb-com-container').length > 0 ){
+                    if( ! componentId ){
 
                         e.stopPropagation();
                         that.addColumn();
@@ -151,32 +149,8 @@ const LayoutRow = ComponentBase.extend(
                     }
 
                 }
-            })
-            //     .sortable({
-            //     connectWidth : '.gplb-sys-editor .glpb-com-layout_row > .glpb-com-content',
-            //     items: "[data-com-name=layout_column]",
-            //     tolerance : 'pointer',
-            //     placeholder: "ui-state-highlight sortable-placeholder-vertical",
-            //     helper : function(event, item){
-            //         let componentName = item.attr('data-com-name');
-            //         return `<div data-com-name="${componentName}" class="gplb-com-drag-holder gplb-drag-com-${componentName}"></div>`;
-            //     },
-            //     start : function(event, ui){
-            //         console.log('start: ' + ui.item.index() );
-            //     },
-            //     update : function(event, ui){
-            //         console.log('sort end: ' + ui.item.index() );
-            //     },
-            //     remove : function(){
-            //         console.log('sort remove');
-            //     },
-            //     stop : function(event, ui){
-            //         console.log('sort stop in ', that.componentId)
-            //     },
-            //     receive : function(event, ui){
-            //         console.log( `sort receive in ${that.componentId}`);
-            //     }
-            // });
+            });
+
 
             this.$el.draggable({
                 handle: "> .glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
@@ -187,24 +161,11 @@ const LayoutRow = ComponentBase.extend(
                 appendTo: "body"
             });
 
-            // $('.ui-sortable').sortable('refresh');
-            // this.$content.draggable({
-            //     // connectToSortable : '.lpb-sortable',
-            //     handle: ".glpb-editor-op-btn-drag",
-            //     revert : 'invalid',
-            //     helper : function(event, item){
-            //         let dragBtn = event.target;
-            //         let componentId = that.componentId;
-            //         let componentName = that.componentName;
-            //         return `<div data-com-name="${componentName}" class="gplb-com-drag-holder gplb-drag-com-${componentName}"></div>`;
-            //     },
-            //     appendTo: "body"
-            // });
         },
 
         editorRemoveComponent : function(componentId){
             ComponentBase.prototype.editorRemoveComponent.call( this, componentId );
-            this.resize();
+            // this.resize();
         },
         editorHandleChildMove : function(componentId, direction){
             let newIndex = ComponentBase.prototype.editorHandleChildMove.call( this, componentId, direction);

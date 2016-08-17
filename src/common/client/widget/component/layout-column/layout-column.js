@@ -19,12 +19,15 @@ const tpl = `<div><div class="glpb-com-content clearfix"></div></div>`;
 const LayoutColumn = ComponentBase.extend(
     {
         componentName : 'layout_column',
-        componentCategory : ComponentBase.CATEGORY.BASE
+        componentNameZh : '列',
+        componentCategory : ComponentBase.CATEGORY.BASE,
+        platform : ComponentBase.PLATFORM.PC
     },
     {
         getDefaultStyle : function(){
             return {
-                height : 'auto'
+                width : '160px',
+                height : '160px'
             };
         },
         init : function(){
@@ -131,6 +134,10 @@ const LayoutColumn = ComponentBase.extend(
             console.log(`add exist component : ${componentName} ${componentId}`);
             let component = this.page.getComponentById(componentId);
             if( component ){
+                if( component.editorGetParentId() === this.componentId ){
+                    //本来就在当前组件里
+                    return;
+                }
                 let oldParentComponent = component.getParentComponent();
                 oldParentComponent.editorRemoveComponent(componentId);
                 this.components.push( component.toJSON() );

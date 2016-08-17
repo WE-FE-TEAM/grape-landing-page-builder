@@ -33,8 +33,26 @@
         font-size: 26px;
         line-height: 26px;
       }
+
+      .editor-op-more{
+        float: left;
+        width: 0;
+        height: 100%;
+        overflow: hidden;
+        //-webkit-transition: all .4s ease-out 1.1s;
+        //transition: all .4s ease-out 1.1s;
+      }
     }
   }
+
+  .editor-op-show-more{
+    .gplb-editor-setting-bar{
+      .editor-op-more{
+        width: 210px;
+      }
+    }
+  }
+
   //显示组件操作栏
   .glpb-editor-bar-showing{
     &>.glpb-editor-setting-wrap{

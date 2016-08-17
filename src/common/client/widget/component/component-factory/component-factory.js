@@ -11,6 +11,10 @@ const utils = require('common:widget/ui/utils/utils.js');
 //存储支持的组件名到组件类的映射
 let componentClassMap = {};
 
+let pcComponents = [];
+let mobileComponents = [];
+let responsiveComponents = [];
+
 //存储当前页面中实例化的组件ID到组件实例的映射
 let pageComponentMap = {};
 
@@ -27,9 +31,25 @@ module.exports = singleton;
  * @param componentClass {function} 组件类的构造函数
  */
 singleton.registerComponentClass = function(componentName, componentClass){
+
     if( componentClassMap[componentName] ){
         throw new Error(`componentName[${componentName}]已经存在了!!不能有相同的组件名`);
     }
+
+    switch(componentClass.platform){
+        case 'pc':
+            pcComponents.push(componentName);
+            break;
+        case 'mobile':
+            mobileComponents.push( componentName );
+            break;
+        case 'responsive':
+            responsiveComponents.push( componentName );
+            break;
+        default:
+            throw new Error(`组件[${componentName}]的构造函数上, 没有合法的所属平台字段[platform]: ${componentClass.platform}`);
+    }
+
     componentClassMap[componentName] = componentClass;
 };
 
@@ -82,6 +102,27 @@ singleton.createComponentInstance = function(config){
 
     return out;
 
+};
+
+/**
+ * 获取某个平台下, 所有系统支持的组件
+ * @param platform {string}
+ * @returns {Array.<*>}
+ */
+singleton.getComponentOfPlatform = function(platform){
+    switch(platform){
+        case 'pc':
+            return pcComponents.slice();
+            break;
+        case 'mobile':
+            return mobileComponents.slice();
+            break;
+        case 'responsive':
+            return responsiveComponents.slice();
+            break;
+        default:
+            throw new Error(`非法的平台字段[platform]: ${platform}`);
+    }
 };
 
 
