@@ -32,13 +32,13 @@ const LayoutColumn = ComponentBase.extend(
         render : function(){
             
             let currentComponentId = this.componentId;
-            let currentConfig = this.page.getComponentConfig(currentComponentId);
+            
             let cssClass = this.getBaseCssClass() + ' ';
             let $el = $(tpl).addClass( cssClass ).css( this.style );
             let $content = $('.glpb-com-content', $el);
             this.$el = $el;
             this.$content = $content;
-            let components = currentConfig.components || [];
+            let components = this.components || [];
             for( var i = 0, len = components.length; i < len; i++ ){
                 let config = components[i];
                 config.parentId = currentComponentId;
@@ -64,6 +64,7 @@ const LayoutColumn = ComponentBase.extend(
             this.$content.droppable({
                 // accept : '.lpb-component',
                 accept : '[data-com-name=layout_row]',
+                greedy : true,
                 classes: {
                     "ui-droppable-active": "custom-state-active",
                     "ui-droppable-hover": "custom-state-hover"
@@ -89,7 +90,16 @@ const LayoutColumn = ComponentBase.extend(
                 }
             });
 
-            $('.ui-sortable').sortable('refresh');
+            this.$el.draggable({
+                handle: "> .glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
+                revert : 'invalid',
+                helper: function(){
+                    return that.editorGetDragHelper();
+                },
+                appendTo: "body"
+            });
+
+            // $('.ui-sortable').sortable('refresh');
         },
         
         //要添加新的一个组件
@@ -104,6 +114,7 @@ const LayoutColumn = ComponentBase.extend(
                 instance.render();
                 this.$content.append( instance.$getElement() );
                 instance.bindEvent();
+                this.components.push( instance.toJSON() );
             }else{
                 throw new Error(`componentName[${componentName}]对应的组件不存在!!`);
             }
@@ -111,7 +122,19 @@ const LayoutColumn = ComponentBase.extend(
         
         //要添加的组件实例,已经存在!
         addExistComponent : function(componentName, componentId ){
+
+            if( componentName === this.componentName ){
+                //column组件不能直接包含自身
+                return;
+            }
             console.log(`add exist component : ${componentName} ${componentId}`);
+            let component = this.page.getComponentById(componentId);
+            if( component ){
+                let oldParentComponent = component.getParentComponent();
+                oldParentComponent.editorRemoveComponent(componentId);
+                this.components.push( component.toJSON() );
+                this.$content.append( component.$getElement() );
+            }
         }
     }
 );

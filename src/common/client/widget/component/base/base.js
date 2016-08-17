@@ -61,17 +61,20 @@ $.extend( ComponentBase.prototype, {
     setData : noop,
 
     toJSON : function(){
-        // let sub = this.components || [];
-        // let subJSON = sub.map( function(com){
-        //     return com.toJSON();
-        // } );
+        let that = this;
+        let sub = this.components || [];
+        let subJSON = sub.map( function(conf){
+            let id = conf.componentId;
+            let com = componentFactory.getComponentById(id);
+            return com.toJSON();
+        } );
         return {
             componentName : this.componentName,
             componentId : this.componentId,
             parentId : this.parentId,
             style : this.style,
             data : this.data,
-            components : this.components || []
+            components : subJSON
         };
     },
     destroy : noop,
@@ -134,6 +137,13 @@ $.extend( ComponentBase.prototype, {
     getDefaultComponents : function(){
         return [];
     },
+
+    getParentComponent : function(){
+        if( this.parentId ){
+            return this.page.getComponentById(this.parentId);
+        }
+        return this.page;
+    },
     
     //返回统一的组件上拖动/编辑的固定DIV容器
     $getEditSettingWrap : function(){
@@ -163,10 +173,11 @@ $.extend( ComponentBase.prototype, {
             let conf = components[i];
             if( conf.componentId === componentId ){
                 components.splice(i, 1);
-                return;
+                return true;
             }
         }
         console.warn(`(editorRemoveComponent) : 组件[${this.componentId}]不包含子组件${componentId}`);
+        return false;
     },
 
     //返回当前组件的父组件ID
@@ -181,6 +192,10 @@ $.extend( ComponentBase.prototype, {
             return parentId === this.componentId;
         }
         return false;
+    },
+
+    editorGetDragHelper : function(){
+        return `<div class="lpb-component " data-com-name="${this.componentName}" data-glpb-com-id="${this.componentId}">xxx</div>`;
     }
 } );
 
