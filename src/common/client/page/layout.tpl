@@ -22,6 +22,10 @@
         <link rel="shortcut icon" type="image/x-icon" href="/client/static/img/favicon.ico" />
 
         <link rel="stylesheet" type="text/css" href="/client/static/css/base.scss" />
+
+        {# font-awesome #}
+        <link rel="stylesheet" type="text/css" href="/client/static/font-awesome-4.6.3/css/font-awesome.css" />
+
         {# jquery ui style #}
         <link rel="stylesheet" type="text/css" href="/client/static/jquery-ui/jquery-ui.css" />
 

@@ -15,7 +15,7 @@
 
     .gplb-editor-setting-bar{
       position: absolute;
-      height: 50px;
+      height: 25px;
       left: 0;
       top: 0;
       -webkit-transform: translateY(-100%);
@@ -27,10 +27,11 @@
       //操作小按钮
       .glpb-editor-op-btn{
         float: left;
-        width: 50px;
-        height: 50px;
+        width: 26px;
+        height: 26px;
         margin-right: 15px;
-        border: 1px solid red;
+        font-size: 26px;
+        line-height: 26px;
       }
     }
   }

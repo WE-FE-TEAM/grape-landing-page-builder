@@ -23,7 +23,6 @@ function Builder( config ){
     this.templateId = config.templateId || '';
     this.title = config.title || '新页面';
     this.meta = config.meta || [];
-    this.rows = config.rows || [];
     this.components = config.components || [];
     this.componentStyles = config.componentStyles || {};
 
@@ -184,10 +183,6 @@ $.extend( Builder.prototype, {
     bindEvent : function(){
         
     },
-
-    getComponentConfig : function(componentId){
-        return this.components[componentId];
-    },
     
     createComponentInstance : function(conf){
         conf.page = this;
@@ -209,7 +204,7 @@ $.extend( Builder.prototype, {
         let $el = component.$getElement();
         this.$editor.append( $el );
         component.bindEvent();
-        this.rows.push( component.toJSON() );
+        this.components.push( component.toJSON() );
     },
     
     addExistRow : function(componentId){
@@ -217,7 +212,7 @@ $.extend( Builder.prototype, {
         if( component ){
             let oldParentComponent = component.getParentComponent();
             oldParentComponent.editorRemoveComponent(componentId);
-            this.rows.push( component.toJSON() );
+            this.components.push( component.toJSON() );
             this.$editor.append( component.$getElement() );
         }
     },
@@ -244,7 +239,7 @@ $.extend( Builder.prototype, {
     },
 
     editorRemoveComponent : function(componentId){
-        let components = this.rows || [];
+        let components = this.components || [];
         for( var i = 0, len = components.length; i < len; i++ ){
             let conf = components[i];
             if( conf.componentId === componentId ){
@@ -254,7 +249,61 @@ $.extend( Builder.prototype, {
         }
         console.warn(`(editorRemoveComponent) : 页面不包含子组件${componentId}`);
         return false;
+    },
+
+    editorHandleChildMove : function(componentId, direction){
+        if( [ 'up', 'down', 'left', 'right'].indexOf(direction) < 0 ){
+            console.warn(`子组件移动方向值[${direction}]非法!!只能是 up/down/left/right 之一`);
+            return false;
+        }
+        let components = this.components || [];
+        let oldIndex = -1;
+        let childConf = null;
+        let len = components.length;
+        for( var i = 0; i < len; i++ ){
+            let temp = components[i];
+            if( temp.componentId === componentId ){
+                oldIndex = i;
+                childConf = temp;
+                break;
+            }
+        }
+        if( ! childConf ){
+            console.error(`父组件[${this.componentId}]不包含子组件[${componentId}]!!`);
+            return false;
+        }
+        let newIndex = oldIndex;
+        switch(direction){
+            case 'up':
+            case 'left':
+                newIndex = oldIndex - 1;
+                break;
+            case 'down':
+            case 'right':
+                newIndex = oldIndex + 1;
+                break;
+            default:;
+
+        }
+        if( newIndex < 0 ){
+            alert(`已经是父组件中的第一个了!`);
+            return false;
+        }
+        if( newIndex >= len ){
+            alert('已经是父组件中最后一个了');
+            return false;
+        }
+        //先从老的位置删除
+        components.splice(oldIndex, 1);
+        //插入到新位置
+        components.splice(newIndex, 0, childConf);
+
+        //移动DOM
+        let targetComponent = this.getComponentById(componentId);
+        let $target = targetComponent.$getElement();
+        utils.moveChildInParent($target, this.$editor, newIndex);
     }
+
 } );
 
 

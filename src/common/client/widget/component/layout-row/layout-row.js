@@ -205,6 +205,13 @@ const LayoutRow = ComponentBase.extend(
         editorRemoveComponent : function(componentId){
             ComponentBase.prototype.editorRemoveComponent.call( this, componentId );
             this.resize();
+        },
+        editorHandleChildMove : function(componentId, direction){
+            let newIndex = ComponentBase.prototype.editorHandleChildMove.call( this, componentId, direction);
+            if( newIndex >= 0 ){
+                let $child = this.page.getComponentById(componentId).$getElement();
+                utils.moveChildInParent($child, this.$content, newIndex);
+            }
         }
     }
 );

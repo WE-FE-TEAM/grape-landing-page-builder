@@ -108,6 +108,65 @@ $.extend( ComponentBase.prototype, {
         }).on('mouseleave', function(){
             that.$el.removeClass('glpb-editor-bar-showing');
         });
+
+        this.$el.on('click', '> .glpb-editor-setting-wrap .glpb-editor-op-btn-move', function(e){
+            let currentTarget = e.currentTarget;
+            let direction = currentTarget.getAttribute('data-direction');
+            that.editorMoveInParent(direction);
+        } );
+    },
+
+    editorMoveInParent : function(direction){
+        this.getParentComponent().editorHandleChildMove(this.componentId, direction);
+    },
+
+    editorHandleChildMove : function(componentId, direction){
+        if( [ 'up', 'down', 'left', 'right'].indexOf(direction) < 0 ){
+            console.warn(`子组件移动方向值[${direction}]非法!!只能是 up/down/left/right 之一`);
+            return -1;
+        }
+        let components = this.components || [];
+        let oldIndex = -1;
+        let childConf = null;
+        let len = components.length;
+        for( var i = 0; i < len; i++ ){
+            let temp = components[i];
+            if( temp.componentId === componentId ){
+                oldIndex = i;
+                childConf = temp;
+                break;
+            }
+        }
+        if( ! childConf ){
+            console.error(`父组件[${this.componentId}]不包含子组件[${componentId}]!!`);
+            return -1;
+        }
+        let newIndex = oldIndex;
+        switch(direction){
+            case 'up':
+            case 'left':
+                newIndex = oldIndex - 1;
+                break;
+            case 'down':
+            case 'right':
+                newIndex = oldIndex + 1;
+                break;
+            default:;
+
+        }
+        if( newIndex < 0 ){
+            alert(`已经是父组件中的第一个了!`);
+            return -1;
+        }
+        if( newIndex >= len ){
+            alert('已经是父组件中最后一个了');
+            return -1;
+        }
+        //先从老的位置删除
+        components.splice(oldIndex, 1);
+        //插入到新位置
+        components.splice(newIndex, 0, childConf);
+        return newIndex;
     },
 
     getComponentId : function(){
@@ -149,7 +208,11 @@ $.extend( ComponentBase.prototype, {
     $getEditSettingWrap : function(){
         let tpl = `<div class="glpb-editor-setting-wrap" data-com-id="${this.componentId}">
     <div class="gplb-editor-setting-bar clearfix">
-        <span title="拖动" class="glpb-editor-op-btn glpb-editor-op-btn-drag" data-com-id="${this.componentId}"></span>
+        <span title="拖动" class="glpb-editor-op-btn glpb-editor-op-btn-drag" data-com-id="${this.componentId}"><i class="fa fa-arrows" aria-hidden="true"></i></span>
+        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="up" title="向上移动"><i class="fa fa-arrow-circle-up" aria-hidden="true"></i></span>
+        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="down"  title="向下移动"><i class="fa fa-arrow-circle-down" aria-hidden="true"></i></span>
+        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="left"  title="向左移动"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+        <span class="glpb-editor-op-btn glpb-editor-op-btn-move" data-direction="right"  title="向右移动"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span>
     </div>
 </div>`;
 
@@ -248,6 +311,7 @@ ComponentBase.extend = function( statics, prototype){
 
 
 ComponentBase.$ = $;
+ComponentBase.utils = utils;
 ComponentBase.generateComponentId = utils.generateComponentId;
 
 //基础组件

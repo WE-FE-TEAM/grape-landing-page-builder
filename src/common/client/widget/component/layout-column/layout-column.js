@@ -10,6 +10,7 @@ const ComponentBase = require('common:widget/component/base/base.js');
 const componentFactory = require('common:widget/component/component-factory/component-factory.js');
 
 const $ = ComponentBase.$;
+const utils = ComponentBase.utils;
 
 const tpl = `<div><div class="glpb-com-content clearfix"></div></div>`;
 
@@ -134,6 +135,13 @@ const LayoutColumn = ComponentBase.extend(
                 oldParentComponent.editorRemoveComponent(componentId);
                 this.components.push( component.toJSON() );
                 this.$content.append( component.$getElement() );
+            }
+        },
+        editorHandleChildMove : function(componentId, direction){
+            let newIndex = ComponentBase.prototype.editorHandleChildMove.call( this, componentId, direction);
+            if( newIndex >= 0 ){
+                let $child = this.page.getComponentById(componentId).$getElement();
+                utils.moveChildInParent($child, this.$content, newIndex);
             }
         }
     }
