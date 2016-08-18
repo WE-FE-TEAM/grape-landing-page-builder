@@ -6,3 +6,4 @@
 
 require('moment');
 require('cssobj');
+require('jsoneditor');

@@ -12,6 +12,8 @@ const $ = require('common:widget/lib/jquery/jquery.js');
 const EventEmitter = require('common:widget/lib/EventEmitter/EventEmitter.js');
 
 
+let id = 0;
+
 function StyleItemBase(args){
 
     this.key = args.key;
@@ -31,6 +33,10 @@ $.extend( StyleItemBase.prototype, {
     
     $generateContainerElement : function(){
         return $(`<div class="style-item-editor"></div>`);
+    },
+    
+    generateInputId : function(){
+        return 'style-edit-input-' + id++;
     },
 
     render : function(){

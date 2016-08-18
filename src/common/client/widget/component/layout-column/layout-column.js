@@ -7,7 +7,6 @@
 
 const ComponentBase = require('common:widget/component/base/base.js');
 
-const componentFactory = require('common:widget/component/component-factory/component-factory.js');
 
 const $ = ComponentBase.$;
 const utils = ComponentBase.utils;
@@ -28,7 +27,8 @@ const LayoutColumn = ComponentBase.extend(
             return {
                 width : '360px',
                 height : '360px',
-                background : 'transparent'
+                background : 'transparent',
+                margin : '0px 0px'
             };
         },
         init : function(){
@@ -68,7 +68,7 @@ const LayoutColumn = ComponentBase.extend(
             ComponentBase.prototype.bindEditorEvent.call( this );
             this.$content.droppable({
                 // accept : '.lpb-component',
-                accept : '[data-com-name=layout_row]',
+                accept : '[data-com-name]',
                 greedy : true,
                 classes: {
                     "ui-droppable-active": "custom-state-active",
@@ -95,14 +95,14 @@ const LayoutColumn = ComponentBase.extend(
                 }
             });
 
-            this.$el.draggable({
-                handle: "> .glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
-                revert : 'invalid',
-                helper: function(){
-                    return that.editorGetDragHelper();
-                },
-                appendTo: "body"
-            });
+            // this.$el.draggable({
+            //     handle: "> .glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
+            //     revert : 'invalid',
+            //     helper: function(){
+            //         return that.editorGetDragHelper();
+            //     },
+            //     appendTo: "body"
+            // });
 
             // $('.ui-sortable').sortable('refresh');
         },

@@ -1,0 +1,21 @@
+
+.glpb-com-gplb_image{
+
+  img{
+    display: block;
+  }
+}
+
+//编辑器中的样式
+.gplb-sys-editor{
+  .glpb-com-gplb_image{
+
+    //操作栏放到左下角侧
+    &> .glpb-editor-setting-wrap .gplb-editor-setting-bar{
+      left: 0;
+      top: auto;
+      bottom: 0;
+    }
+
+  }
+}

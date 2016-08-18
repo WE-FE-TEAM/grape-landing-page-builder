@@ -56,7 +56,10 @@ $.extend( ComponentBase.prototype, {
         return this.style;
     },
 
-    setStyle : noop,
+    setStyle : function( style ){
+        this.style = $.extend( this.style, style );
+        this.$el.css( this.style );
+    },
 
     setData : noop,
 
@@ -124,6 +127,15 @@ $.extend( ComponentBase.prototype, {
         this.$editorSettingWrap.on('click', '.glpb-editor-op-btn-edit', function(){
             that.enterEdit();
         } );
+
+        this.$el.draggable({
+            handle: "> .glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
+            revert : 'invalid',
+            helper: function(){
+                return that.editorGetDragHelper();
+            },
+            appendTo: "body"
+        });
     },
 
     enterEdit : function(){

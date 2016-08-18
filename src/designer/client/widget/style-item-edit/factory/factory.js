@@ -8,18 +8,14 @@
 
 
 const InputEditor = require('designer:widget/style-item-edit/supported-editors/input-editor/input-editor.js');
+const MarginEditor = require('designer:widget/style-item-edit/supported-editors/margin-editor/margin-editor.js');
 
-
-
-
-const itemClassMap = {
-    input : InputEditor
-};
 
 
 const styleKey2EditorClass = {
     width : InputEditor,
-    height : InputEditor
+    height : InputEditor,
+    margin : MarginEditor
 };
 
 const styleKeyLabel = {
@@ -41,7 +37,7 @@ singleton.getStyleLabel = function( styleName ){
 
 //获取某个样式属性对应的编辑器类
 singleton.getEditorClassForStyleKey = function(key){
-    return itemClassMap[key] || InputEditor;
+    return styleKey2EditorClass[key] || InputEditor;
 };
 
 

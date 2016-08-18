@@ -44,6 +44,8 @@ singleton.registerComponentClass = function(componentName, componentClass){
             mobileComponents.push( componentName );
             break;
         case 'responsive':
+            pcComponents.push(componentName);
+            mobileComponents.push( componentName );
             responsiveComponents.push( componentName );
             break;
         default:

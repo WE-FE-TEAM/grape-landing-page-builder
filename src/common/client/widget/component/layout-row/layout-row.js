@@ -10,8 +10,6 @@ const ComponentBase = require('common:widget/component/base/base.js');
 
 const utils = require('common:widget/ui/utils/utils.js');
 
-const componentFactory = require('common:widget/component/component-factory/component-factory.js');
-
 const $ = ComponentBase.$;
 
 const tpl = `<div><div class="glpb-com-content clearfix"></div></div>`;
@@ -27,8 +25,9 @@ const LayoutRow = ComponentBase.extend(
         getDefaultStyle : function(){
             return {
                 height : 'auto',
-                width : '100%',
-                background : 'transparent'
+                width : 'auto',
+                background : 'transparent',
+                margin : '0 auto 10px'
             };
         },
         getDefaultComponents : function(){
@@ -65,11 +64,6 @@ const LayoutRow = ComponentBase.extend(
                 }
             }
             return $el;
-        },
-
-        setStyle : function( style ){
-            this.style = $.extend( this.style, style );
-            this.$el.css( this.style );
         },
 
         addColumn : function(){
@@ -159,14 +153,14 @@ const LayoutRow = ComponentBase.extend(
             });
 
 
-            this.$el.draggable({
-                handle: "> .glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
-                revert : 'invalid',
-                helper: function(){
-                    return that.editorGetDragHelper();
-                },
-                appendTo: "body"
-            });
+            // this.$el.draggable({
+            //     handle: "> .glpb-editor-setting-wrap .glpb-editor-op-btn-drag",
+            //     revert : 'invalid',
+            //     helper: function(){
+            //         return that.editorGetDragHelper();
+            //     },
+            //     appendTo: "body"
+            // });
 
         },
 

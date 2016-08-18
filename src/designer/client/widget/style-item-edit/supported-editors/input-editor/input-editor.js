@@ -25,7 +25,7 @@ $.extend( InputEditor.prototype, BaseEditor.prototype, {
     render : function(){
         let $el = this.$generateContainerElement();
         $el.addClass('style-editor-type-input');
-        let tpl = `<div class="style-editor-label">${this.label}</div>
+        let tpl = `<label class="style-editor-label">${this.label}</label>
 <div>
     <input class="style-edit-input" type="text" placeholder="${this.label}" value="${this.value}" />
 </div>
