@@ -26,7 +26,9 @@ const LayoutRow = ComponentBase.extend(
     {
         getDefaultStyle : function(){
             return {
-                height : 'auto'
+                height : 'auto',
+                width : '100%',
+                background : 'transparent'
             };
         },
         getDefaultComponents : function(){
@@ -63,6 +65,11 @@ const LayoutRow = ComponentBase.extend(
                 }
             }
             return $el;
+        },
+
+        setStyle : function( style ){
+            this.style = $.extend( this.style, style );
+            this.$el.css( this.style );
         },
 
         addColumn : function(){

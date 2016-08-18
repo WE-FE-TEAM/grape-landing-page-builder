@@ -18,20 +18,22 @@
       height: 25px;
       left: 0;
       top: 0;
-      -webkit-transform: translateY(-100%);
-      -moz-transform: translateY(-100%);
-      -ms-transform: translateY(-100%);
-      -o-transform: translateY(-100%);
-      transform: translateY(-100%);
+      background: #fff;
+      //-webkit-transform: translateY(-100%);
+      //-moz-transform: translateY(-100%);
+      //-ms-transform: translateY(-100%);
+      //-o-transform: translateY(-100%);
+      //transform: translateY(-100%);
 
       //操作小按钮
       .glpb-editor-op-btn{
         float: left;
         width: 26px;
         height: 26px;
-        margin-right: 15px;
+        margin-right: 10px;
         font-size: 26px;
         line-height: 26px;
+        color: orange;
       }
 
       .editor-op-more{
@@ -76,18 +78,8 @@
     background: lightblue;
   }
 
-  //sortable 中, 拖拽排序过程中的垂直分隔符
-  .sortable-placeholder-vertical{
-    float: left;
-    width: 2%;
-    height: 100%;
-    background: deeppink;
-  }
-  //sortable 中, 拖拽排序过程中的水平分隔符
-  .sortable-placeholder-horizontal{
-    float: left;
-    width: 100%;
-    height: 10px;
-    background: deeppink;
+  //组件正处于编辑中的样式
+  .glpb-editor-com-editing{
+    outline: 2px dashed deeppink;
   }
 }

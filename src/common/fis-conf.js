@@ -17,7 +17,7 @@ fis.set('namespace', 'common');
  * 静态资源url前添加前缀
  */
 let url_prefix = '/lpbs';
-fis.match('**.{js,css,png,jpg,gif,jsx,scss,ts,eot,ttf,woff,svg,ico}', {
+fis.match('**.{js,css,png,jpg,gif,jsx,scss,ts,eot,ttf,woff,woff2,svg,ico}', {
     domain: url_prefix
 });
 

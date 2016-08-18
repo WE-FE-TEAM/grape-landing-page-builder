@@ -9,6 +9,8 @@
 
 const $ = require('common:widget/lib/jquery/jquery.js');
 
+const EventEmitter = require('common:widget/lib/EventEmitter/EventEmitter.js');
+
 const componentFactory = require('common:widget/component/component-factory/component-factory.js');
 
 const ComponentSelectCtrl = require('designer:widget/edit-aside/component-select-ctrl/component-select-ctrl.js');
@@ -50,7 +52,14 @@ $.extend( EditAsideCtrl.prototype, {
     },
     
     bindEvent : function(){
+
+        let that = this;
+
         this.componentListCtrl.bindEvent();
+
+        EventEmitter.eventCenter.on('component.list.show', function(){
+            that.showComponentList();
+        } );
     },
     
     destroy : function(){
@@ -58,9 +67,20 @@ $.extend( EditAsideCtrl.prototype, {
         this.componentListCtrl = null;
     },
 
+    showComponentList : function(){
+        if( this.currentEdit ){
+            this.currentEdit.hide();
+        }
+        this.componentListCtrl.show();
+    },
+
     showEdit : function(component){
         this.componentListCtrl.hide();
         if( this.currentEdit ){
+            if( this.currentEdit.getComponent() === component ){
+                this.currentEdit.show();
+                return;
+            }
             this.currentEdit.destroy();
         }
         let edit = new ComponentEditCtrl({
@@ -68,6 +88,7 @@ $.extend( EditAsideCtrl.prototype, {
         });
         edit.render();
         this.$el.append( edit.$getElement() );
+        edit.bindEvent();
         this.currentEdit = edit;
 
         edit.show();

@@ -26,8 +26,9 @@ const LayoutColumn = ComponentBase.extend(
     {
         getDefaultStyle : function(){
             return {
-                width : '160px',
-                height : '160px'
+                width : '360px',
+                height : '360px',
+                background : 'transparent'
             };
         },
         init : function(){

@@ -130,6 +130,15 @@ $.extend( ComponentBase.prototype, {
         this.page.editComponent(this.componentId);
     },
 
+    //显示正在编辑中的状态
+    addEditingState : function(){
+        this.$el.addClass('glpb-editor-com-editing');
+    },
+
+    removeEditingState : function(){
+        this.$el.removeClass('glpb-editor-com-editing');
+    },
+
     editorMoveInParent : function(direction){
         this.getParentComponent().editorHandleChildMove(this.componentId, direction);
     },

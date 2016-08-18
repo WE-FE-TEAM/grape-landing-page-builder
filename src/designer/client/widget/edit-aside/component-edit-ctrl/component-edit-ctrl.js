@@ -15,6 +15,8 @@ const StyleEditCtrl = require('designer:widget/edit-aside/style-edit-ctrl/style-
 const DataEditCtrl = require('designer:widget/edit-aside/data-edit-ctrl/data-edit-ctrl.js');
 
 
+const TAB_NAV_ITEM_ACTIVE = 'tab-nav-item-active';
+
 function ComponentEditCtrl(args){
 
     this.platform = args.platform;
@@ -43,12 +45,14 @@ $.extend( ComponentEditCtrl.prototype, {
 
     render : function(){
         let tpl = `<div class="editor-com-edit-ctrl">
-        <h2 class="editor-back-to-list">返回组件列表</h2>
-        <ul class="tab-nav">
-            <li data-for="style">编辑样式</li>
-            <li data-for="data">编辑数据</li>
-        </ul>
-        <div class="tab-con"></div>
+        <div class="editor-com-edit-inner">
+            <h2 class="editor-back-to-list"><i class="fa fa-angle-left" aria-hidden="true"></i>返回组件列表</h2>
+            <ul class="tab-nav clearfix">
+                <li class="tab-nav-item ${TAB_NAV_ITEM_ACTIVE}" data-for="style">编辑样式</li>
+                <li class="tab-nav-item" data-for="data">编辑数据</li>
+            </ul>
+            <div class="tab-con"></div>
+        </div>
 </div>`;
 
         let $el = $(tpl);
@@ -67,8 +71,13 @@ $.extend( ComponentEditCtrl.prototype, {
             EventEmitter.eventCenter.trigger('component.list.show');
         } );
         this.$el.on('click', '.tab-nav li', function(e){
-            let li = e.currentTarget;
-            let forData = li.getAttribute('data-for');
+            let $li = $(e.currentTarget);
+            if($li.hasClass( TAB_NAV_ITEM_ACTIVE )){
+                return;
+            }
+            $li.siblings().removeClass(TAB_NAV_ITEM_ACTIVE);
+            $li.addClass(TAB_NAV_ITEM_ACTIVE);
+            let forData = $li.attr('data-for');
             that.showView( forData );
         } );
         
@@ -97,13 +106,20 @@ $.extend( ComponentEditCtrl.prototype, {
 
     show : function(){
         this.$el.show();
+        this.component.addEditingState();
     },
 
     hide : function(){
         this.$el.hide();
+        this.component.removeEditingState();
+    },
+    
+    getComponent : function(){
+        return this.component;
     },
 
     destroy : function(){
+        this.component.removeEditingState();
         this.styleCtrl.destroy();
         this.dataCtrl.destroy();
         this.styleCtrl = null;
@@ -111,6 +127,7 @@ $.extend( ComponentEditCtrl.prototype, {
         this.$el.off();
         this.$el.remove();
         this.$el = null;
+        this.component = null;
     }
 } );
 
