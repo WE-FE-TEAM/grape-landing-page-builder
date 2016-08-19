@@ -11,7 +11,9 @@ const $ = require('common:widget/lib/jquery/jquery.js');
 
 const EventEmitter = require('common:widget/lib/EventEmitter/EventEmitter.js');
 
-const componentFactory = require('common:widget/component/component-factory/component-factory.js');
+const glpbBase = require('glpb-components-common');
+
+const componentFactory = glpbBase.factory;
 
 const ComponentSelectCtrl = require('designer:widget/edit-aside/component-select-ctrl/component-select-ctrl.js');
 const ComponentEditCtrl = require('designer:widget/edit-aside/component-edit-ctrl/component-edit-ctrl.js');

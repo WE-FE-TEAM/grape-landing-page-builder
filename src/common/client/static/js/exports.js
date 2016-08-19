@@ -7,3 +7,4 @@
 require('moment');
 require('cssobj');
 require('jsoneditor');
+require('glpb-components-common');

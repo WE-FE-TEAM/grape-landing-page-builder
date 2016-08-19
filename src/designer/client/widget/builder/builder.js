@@ -10,9 +10,11 @@ const cssobj = require('cssobj');
 
 const $ = require('common:widget/lib/jquery/jquery.js');
 
-const utils = require('common:widget/ui/utils/utils.js');
+const glpbBase = require('glpb-components-common');
 
-const componentFactory = require('common:widget/component/component-factory/component-factory.js');
+const utils = glpbBase.utils;
+
+const componentFactory = glpbBase.factory;
 
 const EditAsideCtrl = require('designer:widget/edit-aside/edit-aside-ctrl/edit-aside-ctrl.js');
 

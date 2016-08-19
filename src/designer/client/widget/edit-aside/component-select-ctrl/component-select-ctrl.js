@@ -9,7 +9,9 @@
 
 const $ = require('common:widget/lib/jquery/jquery.js');
 
-const componentFactory = require('common:widget/component/component-factory/component-factory.js');
+const glpbBase = require('glpb-components-common');
+
+const componentFactory = glpbBase.factory;
 
 
 function ComponentSelectCtrl( args ){

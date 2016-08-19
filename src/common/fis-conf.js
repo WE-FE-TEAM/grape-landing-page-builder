@@ -31,6 +31,23 @@ fis.set('distDir', distDir);
 let excludeModules = ['classnames'];
 fis.set('excludeModules', excludeModules);
 
+fis.match('/node_modules/glpb-components-{common,pc,mobile}/(**.{css,scss})', {
+    parser: fis.plugin('node-sass'),
+    rExt: '.css'
+});
+
+fis.match('/node_modules/glpb-components-{common,pc,mobile}/(**.{js,jsx})', {
+    preprocessor: [
+        fis.plugin('js-require-file'),
+        fis.plugin('js-require-css')
+    ],
+    parser : fis.plugin('babel-5.x', {
+        blacklist: [ 'useStrict' ],
+        loose: ["es6.classes", "es6.properties.computed"]
+    }),
+    rExt: '.js'
+});
+
 /**
  * 打包策略 :
  *     node_modules资源打包

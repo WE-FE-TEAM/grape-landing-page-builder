@@ -6,8 +6,9 @@
 'use strict';
 
 const $ = require('common:widget/lib/jquery/jquery.js');
-const utils = require('common:widget/ui/utils/utils.js');
-const componentFactory = require('common:widget/component/component-factory/component-factory.js');
+const glpbBase = require('glpb-components-common');
+const utils = glpbBase.utils;
+const componentFactory = glpbBase.factory;
 
 const Builder = require('designer:widget/builder/builder.js');
 
