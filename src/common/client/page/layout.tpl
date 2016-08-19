@@ -29,6 +29,9 @@
         {# jquery ui style #}
         <link rel="stylesheet" type="text/css" href="/client/static/jquery-ui/jquery-ui.css" />
 
+        {# material framework #}
+        <link rel="stylesheet" type="text/css" href="/client/static/materialize/css/materialize.css" />
+
         {% block block_head_css %}
         {% endblock %}
 
