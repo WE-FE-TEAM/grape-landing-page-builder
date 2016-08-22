@@ -18,7 +18,7 @@ require('common:widget/lib/jquery/jquery.js');
 
 require('common:widget/lib/jquery-ui/jquery-ui.js');
 
-require('common:widget/lib/materialize/materialize.js');
+// require('common:widget/lib/materialize/materialize.js');
 
 // require('common:widget/lib/jquery-html5-dnd/jquery-html5-dnd.js');
 

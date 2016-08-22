@@ -12,7 +12,6 @@ const $ = require('common:widget/lib/jquery/jquery.js');
 const EventEmitter = require('common:widget/lib/EventEmitter/EventEmitter.js');
 
 const StyleEditCtrl = require('designer:widget/edit-aside/style-edit-ctrl/style-edit-ctrl.js');
-const DataEditCtrl = require('designer:widget/edit-aside/data-edit-ctrl/data-edit-ctrl.js');
 
 
 const TAB_NAV_ITEM_ACTIVE = 'tab-nav-item-active';
@@ -25,7 +24,7 @@ function ComponentEditCtrl(args){
 
     this.$el = null;
     this.styleCtrl = null;
-    this.dataCtrl = null;
+
 
     this.init();
 }
@@ -35,9 +34,6 @@ $.extend( ComponentEditCtrl.prototype, {
 
     init : function(){
         this.styleCtrl = new StyleEditCtrl({
-            component : this.component
-        });
-        this.dataCtrl = new DataEditCtrl({
             component : this.component
         });
         
@@ -60,9 +56,7 @@ $.extend( ComponentEditCtrl.prototype, {
         
         this.styleCtrl.render();
         $el.find('.tab-con').append( this.styleCtrl.$getElement() );
-        
-        this.dataCtrl.render();
-        $el.find('.tab-con').append( this.dataCtrl.$getElement() );
+
     },
 
     bindEvent : function(){
@@ -75,25 +69,32 @@ $.extend( ComponentEditCtrl.prototype, {
             if($li.hasClass( TAB_NAV_ITEM_ACTIVE )){
                 return;
             }
+            let forData = $li.attr('data-for');
+            if( forData === 'data' ){
+                //编辑组件数据
+                EventEmitter.eventCenter.trigger('component.data.edit', {
+                    component : that.component
+                } );
+                return;
+            }
             $li.siblings().removeClass(TAB_NAV_ITEM_ACTIVE);
             $li.addClass(TAB_NAV_ITEM_ACTIVE);
-            let forData = $li.attr('data-for');
+
             that.showView( forData );
         } );
         
         this.styleCtrl.bindEvent();
-        this.dataCtrl.bindEvent();
     },
 
     showView : function(view){
         switch( view ){
             case 'style':
-                this.dataCtrl.hide();
+
                 this.styleCtrl.show();
                 break;
             case 'data':
                 this.styleCtrl.hide();
-                this.dataCtrl.show();
+
                 break;
             default:
                 ;
@@ -121,9 +122,9 @@ $.extend( ComponentEditCtrl.prototype, {
     destroy : function(){
         this.component.removeEditingState();
         this.styleCtrl.destroy();
-        this.dataCtrl.destroy();
+
         this.styleCtrl = null;
-        this.dataCtrl = null;
+
         this.$el.off();
         this.$el.remove();
         this.$el = null;

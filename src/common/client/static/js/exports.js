@@ -6,5 +6,6 @@
 
 require('moment');
 require('cssobj');
+require('common:node_modules/jsoneditor/dist/jsoneditor.css');
 require('jsoneditor');
 require('glpb-components-common');

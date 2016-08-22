@@ -1,7 +1,9 @@
 /**
  * Created by jess on 16/8/19.
  */
-
+/**
+ * @require common:node_modules/jsoneditor/dist/jsoneditor.css
+ */
 
 'use strict';
 
@@ -9,6 +11,8 @@
 const jsoneditor = require('jsoneditor');
 
 const $ = require('common:widget/lib/jquery/jquery.js');
+
+// require('common:node_modules/jsoneditor/dist/jsoneditor.css');
 
 
 function JSONEditor(args){

@@ -18,6 +18,8 @@ const componentFactory = glpbBase.factory;
 const ComponentSelectCtrl = require('designer:widget/edit-aside/component-select-ctrl/component-select-ctrl.js');
 const ComponentEditCtrl = require('designer:widget/edit-aside/component-edit-ctrl/component-edit-ctrl.js');
 
+const DataEditorEntry = require('designer:widget/data-editor/data-editor-entry/data-editor-entry.js');
+
 
 function EditAsideCtrl(args){
     
@@ -25,6 +27,7 @@ function EditAsideCtrl(args){
     
     this.componentListCtrl = null;
     this.componentEditMap = {};
+    this.dataEditor = null;
     
     this.$el = $( args.el );
     
@@ -42,6 +45,8 @@ $.extend( EditAsideCtrl.prototype, {
             platform : this.platform,
             supportComponents : components
         });
+
+        this.dataEditor = new DataEditorEntry({});
     },
     
     render : function(){
@@ -61,6 +66,10 @@ $.extend( EditAsideCtrl.prototype, {
 
         EventEmitter.eventCenter.on('component.list.show', function(){
             that.showComponentList();
+        } );
+
+        EventEmitter.eventCenter.on('component.data.edit', function( args ){
+            that.editComponentData( args );
         } );
     },
     
@@ -94,6 +103,10 @@ $.extend( EditAsideCtrl.prototype, {
         this.currentEdit = edit;
 
         edit.show();
+    },
+
+    editComponentData : function(args){
+        this.dataEditor.editComponent( args.component );
     }
     
 } );
